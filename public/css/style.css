@@ -1,0 +1,39 @@
+/* .wrapper { */
+/*    width: 980px; */
+/*     margin: 0 auto; */
+
+/* } */
+
+#dashboard-side{
+    background:  #f2f2f2;
+    min-height: 500px;
+    padding:10px;
+}
+#dashboard-main{
+    background:  #f2f2f2;
+    min-height: 500px;
+    padding:10px;
+}
+
+#list-todos, #list-notes{
+    margin-top: 10px;
+}
+
+a span.badge{
+    position: relative;
+    float: right;
+    background-color: #6666FF;
+}
+/** Generic Stuff **/
+.hide-alert{
+    display: none;
+}
+
+input.update_todo {
+    margin-right: 10px;
+
+}
+
+.crossed{
+    text-decoration: line-through;
+}
