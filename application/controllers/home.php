@@ -18,11 +18,15 @@ class Home extends CI_Controller{
 
     public function test(){
         $this->load->model('user_model');
-        $result =$this->user_model->get([
-            'login' => 'chingada'
+        // $result = $this->user_model->update(
+        //     ['login' => 'la vieja de polo', "password" => 'en cuatro'],
+        //     15
 
-        ]);
+        // );
+        $result =$this->user_model->get(15);
+        $num = $this->user_model->insertUpdate(['login' => 'Diolanda'], 15);  
         echo "<pre>";
+        print_r($num);
         print_r($result);
     }
 

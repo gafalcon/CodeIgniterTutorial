@@ -98,12 +98,13 @@ class Api extends CI_Controller {
 
    public function get_todo($id = null){
         $this->_require_login();
+        $this->load->model('todo_model');
+        $data = ['user_id' => $this->session->userdata('user_id')];
         if($id != null){
-            $this->db->where('todo_id', $id);
+            $data['todo_id'] = $id; 
         }
-        $this->db->where('user_id', $this->session->userdata('user_id'));
-        $query = $this->db->get('todo');
-        $this->output->set_output(json_encode($query->result_array()));
+        $result = $this->todo_model->get($data);
+        $this->output->set_output(json_encode($result));
 
     }
    // -----------------------------------------------------------------
@@ -123,7 +124,8 @@ class Api extends CI_Controller {
            'content' => $this->input->post('content'),
            'user_id' => $this->session->userdata('user_id')
        ];
-       $result = $this->db->insert('todo',$new_todo);
+       $this->load->model('todo_model');
+       $result = $this->todo_model->insert($new_todo);
 
        if($result){
            $new_todo['todo_id'] = $this->db->insert_id();
@@ -148,14 +150,13 @@ class Api extends CI_Controller {
         $todo_id = $this->input->post('todo_id');
         $completed = $this->input->post('completed');
 
+        $this->load->model('todo_model');
 
-        $this->db->where('todo_id', $todo_id);
-        $this->db->update('todo',[
-            'completed' => $completed
-
-        ]);
-
-        if($this->db->affected_rows() > 0){
+        $rows = $this->todo_model->update(
+            ['completed' => $completed], $todo_id
+        );
+        
+        if($rows > 0){
            $this->output->set_output(json_encode([
                'result' => 1
             ]));
@@ -175,12 +176,13 @@ class Api extends CI_Controller {
         $this->_require_login();
 
         $this->output->set_content_type('application_json');
-        $this->db->delete('todo', [
+        $this->load->model('todo_model');
+        $rows = $this->todo_model->delete([
             'todo_id' => $this->input->post('todo_id'),
             'user_id' => $this->session->userdata('user_id')
         ]);
 
-        if($this->db->affected_rows()>0){
+        if($rows>0){
            $this->output->set_output(json_encode([
                'result' => 1
             ]));
@@ -197,12 +199,14 @@ class Api extends CI_Controller {
 
    public function get_note($id = null){
         $this->_require_login();
+        $this->load->model('note_model');
+        $data = ['user_id' => $this->session->userdata('user_id')];
         if($id != null){
-            $this->db->where('todo_id', $id);
+            $data['note_id'] = $id; 
         }
-        $this->db->where('user_id', $this->session->userdata('user_id'));
-        $query = $this->db->get('note');
-        $this->output->set_output(json_encode($query->result_array()));
+        $result = $this->note_model->get($data);
+        $this->output->set_output(json_encode($result));
+
 
     }
 
@@ -226,9 +230,9 @@ class Api extends CI_Controller {
             'user_id' => $this->session->userdata('user_id'),
             'title' => $this->input->post('title')
         ];
-
-        $result = $this->db->insert('note',$new_note);
-
+        $this->load->model('note_model');
+        $result = $this->note_model->insert($new_note);
+        
         if($result){
            $new_note['note_id'] = $this->db->insert_id();
            $this->output->set_output(json_encode([
@@ -258,12 +262,15 @@ class Api extends CI_Controller {
         $this->_require_login();
 
         $this->output->set_content_type('application_json');
-        $this->db->delete('note', [
+
+        $this->load->model('note_model');
+        
+        $rows = $this->note_model->delete([
             'note_id' => $this->input->post('note_id'),
             'user_id' => $this->session->userdata('user_id')
         ]);
 
-        if($this->db->affected_rows()>0){
+        if($rows>0){
            $this->output->set_output(json_encode([
                'result' => 1
             ]));
@@ -273,6 +280,7 @@ class Api extends CI_Controller {
             'result' => 0,
             'msg'=> 'Could not delete note'
         ]));
+
 
     }
 }
