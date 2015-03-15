@@ -11,9 +11,9 @@
       
 </head>
 <body>
-    <header>
+    <div class="heading container-fluid">
 	<h1>CodeIgniter 2 Tutorial</h1>
-    </header>
+    </div>
 
     <!-- class wrapper -->
     <div class="wrapper">

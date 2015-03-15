@@ -33,7 +33,35 @@ input.update_todo {
     margin-right: 10px;
 
 }
+.list-group-item-heading {
+    font-weight: bold;
 
+}
 .crossed{
     text-decoration: line-through;
+}
+
+.ajax-loader{
+    background: url("../img/ajax-loader.gif");
+    width: 64px;
+    height: 64px;
+    margin: auto;
+
+}
+
+
+.heading{
+    background: #f2f2f2;
+    padding-left: 40px;
+}
+
+footer{
+    padding-top: 10px;
+    padding-left: 40px;
+    border-top:solid #fbfbfb;
+    margin-top: 10px;
+}
+
+#dashboard-header{
+    margin-top: 15px;
 }

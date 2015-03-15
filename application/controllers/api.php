@@ -198,14 +198,15 @@ class Api extends CI_Controller {
    // -----------------------------------------------------------------
 
    public function get_note($id = null){
-        $this->_require_login();
-        $this->load->model('note_model');
-        $data = ['user_id' => $this->session->userdata('user_id')];
-        if($id != null){
-            $data['note_id'] = $id; 
-        }
-        $result = $this->note_model->get($data);
-        $this->output->set_output(json_encode($result));
+       sleep(2);
+       $this->_require_login();
+       $this->load->model('note_model');
+       $data = ['user_id' => $this->session->userdata('user_id')];
+       if($id != null){
+           $data['note_id'] = $id; 
+       }
+       $result = $this->note_model->get($data);
+       $this->output->set_output(json_encode($result));
 
 
     }
@@ -253,6 +254,35 @@ class Api extends CI_Controller {
     public function update_note(){
         $this->_require_login();
         $node_id = $this->input->post('note_id');
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('title', 'Title', 'required|max_length[100]');
+        $this->form_validation->set_rules('content', 'Content', 'required|max_length[255]');
+        if($this->form_validation->run() == false){
+            $this->output->set_output(json_encode([
+                'result' => 0,
+                'error' => $this->form_validation->error_array()
+            ]));
+            return false;
+        }
+        $note_id = $this->input->post('note_id');
+        $update_note = [
+            'content' => $this->input->post('content'),
+            'title' => $this->input->post('title')
+        ];
+        $this->load->model('note_model');
+        $result = $this->note_model->update($update_note, $note_id);
+        
+        if($result){
+            $new_note['note_id'] = $this->db->insert_id();
+            $this->output->set_output(json_encode([
+                'result' => 1,
+            ]));
+            return false;
+        }
+        $this->output->set_output(json_encode([
+            'result' => 0,
+            'error' => 'Could not update note'
+        ]));
 
     }
 
